@@ -3,10 +3,12 @@
 Techniques for improving the performance of differentially private (DP) GANs, as described in our paper:
 - Alex Bie, Gautam Kamath*, Guojun Zhang*. [*Private GANs, revisited*](https://arxiv.org/abs/2302.02936). In TMLR, 2023. 
 
+Tuning *n<sub>D</sub>* (number of D steps per G step) improves FID on MNIST.
+
+<img src="https://github.com/alexbie98/dpgan-revisit/blob/main/figs/mnist-fid-vs-eps.png?raw=true" width="40%">
 
 **Disclaimer**: this is *research code, not a production-grade DP implementation* suitable for releasing real sensitive data.
 In particular, it does not handle issues like secure RNG and floating point vulnerabilities. 
-
 
 ## Requirements
 - See `requirements.txt`
