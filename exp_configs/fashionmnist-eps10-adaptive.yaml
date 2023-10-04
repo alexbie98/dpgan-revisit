@@ -1,0 +1,45 @@
+# exp
+seed: 0
+dataset: FashionMNIST # # one of [MNIST, FashionMNIST, celeba]
+val_set: test # one of [val, test]
+
+# perf settings
+gpu: 0
+max_physical_bsz: 800
+num_workers: 0
+
+# eval
+val_interval: 29000
+display_interval: 1000
+num_gen_examples_eval: # how many examples are generated for eval? (Leave blank to match train)
+
+# HYPERPARAMS --------------------------------
+
+# optimizer (DCGAN defaults from Radford et al., 2016)
+g_lr: 0.0002 # G and D learning rate
+d_lr: 0.0002
+beta1: 0.5
+beta2: 0.999
+
+# training
+bsz: 512
+num_d_steps: 174000
+d_steps_per_g_step: 1 # D step interval between each G step
+
+# architecture
+dim_latent: 128
+dim_g: 128
+dim_d: 128 # discriminator dimensionality, must divisible by 2
+small: False
+
+# privacy
+dp: True
+sigma: 2.0
+clip: 1.0
+delta: 1.0e-5 # pyyaml parsing: need to write in form x.ye-z, e.g. 5.0e-10
+
+# d_step schedule
+ds: True   # one of [True, False]
+grace: 200   # grace period after moving to new step sched
+thresh: 0.60  # threshold
+ds_beta: 0.99   # ema beta parameter

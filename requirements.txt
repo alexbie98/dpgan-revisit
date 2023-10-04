@@ -1,0 +1,9 @@
+torch
+tensorboard
+opacus==1.1.3
+pytest
+pyyaml
+tqdm
+matplotlib
+torchvision
+pytorch-fid

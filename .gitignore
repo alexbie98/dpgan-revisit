@@ -1,0 +1,14 @@
+/data
+/results
+/logs
+
+.cache
+.pylintrc
+
+.ipynb_checkpoints
+*.ipynb
+*.egg-info
+__pycache__
+.pytest_cache
+*.pyc
+
