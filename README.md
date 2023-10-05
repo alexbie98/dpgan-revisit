@@ -3,45 +3,45 @@
 Techniques for improving the performance of differentially private (DP) GANs, as described in our paper:
 - Alex Bie, Gautam Kamath*, Guojun Zhang*. [*Private GANs, revisited*](https://arxiv.org/abs/2302.02936). In TMLR, 2023. 
 
-Tuning *n<sub>D</sub>* (number of D steps per G step) improves FID on MNIST.
+Figure: Tuning *n<sub>D</sub>* (number of D steps per G step) improves FID on MNIST.
 
-<img src="https://github.com/alexbie98/dpgan-revisit/blob/main/figs/mnist-fid-vs-eps.png?raw=true" width="40%">
+<img src="https://github.com/alexbie98/dpgan-revisit/blob/main/figs/mnist-fid-vs-eps.png?raw=true" width="450">
 
 **Disclaimer**: this is *research code, not a production-grade DP implementation* suitable for releasing real sensitive data.
 In particular, it does not handle issues like secure RNG and floating point vulnerabilities. 
 
 ## Requirements
-- See `requirements.txt`
-- Tested on: Python 3.11.4, PyTorch 2.0.1 (CUDA 11.7, cuDNN 8.5), **Opacus 1.1.3**
-- **IMPORTANT**: tests fail with latest Opacus 1.4.0, seems like some semantics/breaking changes >1.1.3
+- See `requirements.txt`.
+- Tested on: Python 3.11.4, PyTorch 2.0.1 (CUDA 11.7, cuDNN 8.5), **Opacus 1.1.3**.
+- **IMPORTANT**: tests fail with latest Opacus 1.4.0, seems like some semantics/breaking changes >1.1.3.
 
 
-## Quickstart
+## Quick start
 
-    $ pip install -e .              ## install
-    $ python -m pytest test         ## run tests (optional)
-    $ python train_dpgan.py         ## run ε=10 MNIST config
-                                    ## requires ~15GB VRAM, runs in ~8 hours on 1x V100
+    pip install -e .              ## install
+    python -m pytest test         ## run tests (optional)
+    python train_dpgan.py         ## run ε=10 MNIST config
+                                  ## requires ~15GB VRAM, runs in ~8 hours on 1x V100
 
 See intermediate eval results and other diagnostics with TensorBoard. TensorBoard logs are saved in `logs/<dataset>/<run>/`. To view:
 
-    $ tensorboard --logdir logs    ## then visit localhost:6006 in web browser
+    tensorboard --logdir logs     ## then visit localhost:6006 in web browser
 
 Checkpoints are saved in `results/<dataset>/<run>/`.
 
 After training is done, to run FID and accuracy eval on a checkpoint:
 
-    $ python scripts/eval_checkpoint.py --path results/<dataset>/<run>/<g-checkpoint>.pt
+    python scripts/eval_checkpoint.py --path results/<dataset>/<run>/<g-checkpoint>.pt
 
 By default, this: (1) creates folders of `.png` files for real and generated data; (2) runs `pytorch-fid` and classifier training from the folders.
-You can add the `--in_memory` flag to skip this step, which leads to similar but not identical numbers.
+You can add the `--in_memory` flag to skip the image saving and loading, which leads to similar but not identical numbers.
 
 
 ## Running different configs
 
 Write your own training configurations in `config.yaml`. To use it, run
 
-    $ python train_dpgan.py --config config.yaml
+    python train_dpgan.py --config config.yaml
 
 See [`exp_configs/example.yaml`](exp_configs/example.yaml) for an example config file that you can modify.
 
@@ -60,14 +60,17 @@ Some settings used in the paper can be found in [`exp_configs/`](exp_configs/).
 ## Benchmarks
 Selected benchmark numbers obtained by running configs in this repo.
 
-|  ε | Dataset | Adaptive? | FID  | Acc. | Mem  | Config |
+|  ε | Dataset | Adaptive *n<sub>D</sub>*? | FID  | Acc. | Mem  | Config |
 |:--:|---------|:---------:|-----:|-----:|-----:|:-----|
-| ∞  | MNIST   |     ✘     |  3.4 | 97.1 |  6GB | [`mnist-nonpriv.yaml`](exp_configs/mnist-nonpriv.yaml) |
+| ∞  | MNIST   |     ✗     |  3.4 | 97.1 |  6GB | [`mnist-nonpriv.yaml`](exp_configs/mnist-nonpriv.yaml) |
 | | | | | | | |
-| 10 | MNIST   |     ✘     | 19.4 | 93.0 | 15GB | [`mnist-eps10-50dsteps.yaml`](exp_configs/mnist-eps10-50dsteps.yaml) |
-| 10 | MNIST   |     ✔     | ---- | ---- | 25GB | [`mnist-eps10-adaptive.yaml`](exp_configs/mnist-eps10-adaptive.yaml) |
+| 10 | MNIST   |     ✗     | 19.4 | 93.0 | 15GB | [`mnist-eps10-50dsteps.yaml`](exp_configs/mnist-eps10-50dsteps.yaml) |
+| 10 | MNIST   |     ✓     | 13.3 | 94.4 | 25GB | [`mnist-eps10-adaptive.yaml`](exp_configs/mnist-eps10-adaptive.yaml) |
 
 
+Figure: Generated MNIST images @ ε=10, adaptive *n<sub>D</sub>*. 
+
+<img src="https://github.com/alexbie98/dpgan-revisit/blob/main/figs/mnist-eps10-adaptive.png?raw=true" width="400">
 
 
 ## Acknowledgments
